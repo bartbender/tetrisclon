@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 () => {
                     const originalBlocks = [...this.activePiece.blocks]; // Guardar el estado original
-                    this.activePiece?.rotate(10, this.rows); // Rotar con límites del tablero
+                    this.activePiece?.rotate(10, this.rows, this.board); // Pasar el tablero al rotar
                     if (this.checkLock()) {
                         this.activePiece.blocks = originalBlocks; // Deshacer la rotación si colisiona
                     }

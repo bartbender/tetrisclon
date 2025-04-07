@@ -18,7 +18,7 @@ export class Piece {
         });
     }
 
-    rotate(boardWidth = 10, boardHeight = 20) {
+    rotate(boardWidth = 10, boardHeight = 20, board) {
         // Rotar la pieza alrededor de su centro
         const centerX = this.blocks[0].x; // Usar el primer bloque como referencia
         const centerY = this.blocks[0].y;
@@ -28,13 +28,33 @@ export class Piece {
             y: centerY + (block.x - centerX)
         }));
 
-        // Verificar si la rotación hace que algún bloque quede fuera de los límites
-        const isOutOfBounds = rotatedBlocks.some(block =>
-            block.x < 0 || block.x >= boardWidth || block.y >= boardHeight
-        );
+        // Sistema de "wall kicks" para ajustar la posición después de rotar
+        const kicks = [
+            { dx: 0, dy: 0 },  // Sin desplazamiento
+            { dx: -1, dy: 0 }, // Mover a la izquierda
+            { dx: 1, dy: 0 },  // Mover a la derecha
+            { dx: 0, dy: -1 }, // Mover hacia arriba
+            { dx: 0, dy: 1 }   // Mover hacia abajo
+        ];
 
-        if (!isOutOfBounds) {
-            this.blocks = rotatedBlocks; // Aplicar la rotación si está dentro de los límites
+        for (const kick of kicks) {
+            const adjustedBlocks = rotatedBlocks.map(block => ({
+                x: block.x + kick.dx,
+                y: block.y + kick.dy
+            }));
+
+            // Verificar si la rotación ajustada está dentro de los límites y no colisiona
+            const isValid = adjustedBlocks.every(block =>
+                block.x >= 0 &&
+                block.x < boardWidth &&
+                block.y < boardHeight &&
+                (block.y < 0 || board[block.y][block.x] === 0) // No colisiona con otras piezas
+            );
+
+            if (isValid) {
+                this.blocks = adjustedBlocks; // Aplicar la rotación ajustada
+                return;
+            }
         }
     }
 
