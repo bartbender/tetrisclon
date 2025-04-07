@@ -19,42 +19,44 @@ export class Piece {
     }
 
     rotate(boardWidth = 10, boardHeight = 20, board) {
-        // Rotar la pieza alrededor de su centro
-        const centerX = this.blocks[0].x; // Usar el primer bloque como referencia
-        const centerY = this.blocks[0].y;
+        // Determinar el bloque de referencia (top-left) como punto de pivote
+        const pivot = this.blocks.reduce((topLeft, block) => ({
+            x: Math.min(topLeft.x, block.x),
+            y: Math.min(topLeft.y, block.y)
+        }), { x: Infinity, y: Infinity });
 
+        // Calcular los bloques rotados alrededor del punto de pivote
         const rotatedBlocks = this.blocks.map(block => ({
-            x: centerX - (block.y - centerY),
-            y: centerY + (block.x - centerX)
+            x: pivot.x - (block.y - pivot.y),
+            y: pivot.y + (block.x - pivot.x)
         }));
 
-        // Sistema de "wall kicks" para ajustar la posición después de rotar
-        const kicks = [
-            { dx: 0, dy: 0 },  // Sin desplazamiento
-            { dx: -1, dy: 0 }, // Mover a la izquierda
-            { dx: 1, dy: 0 },  // Mover a la derecha
-            { dx: 0, dy: -1 }, // Mover hacia arriba
-            { dx: 0, dy: 1 }   // Mover hacia abajo
-        ];
+        // Determinar el nuevo bloque top-left después de la rotación
+        const newTopLeft = rotatedBlocks.reduce((topLeft, block) => ({
+            x: Math.min(topLeft.x, block.x),
+            y: Math.min(topLeft.y, block.y)
+        }), { x: Infinity, y: Infinity });
 
-        for (const kick of kicks) {
-            const adjustedBlocks = rotatedBlocks.map(block => ({
-                x: block.x + kick.dx,
-                y: block.y + kick.dy
-            }));
+        // Calcular el desplazamiento necesario para mantener el nuevo top-left en la posición del anterior
+        const offsetX = pivot.x - newTopLeft.x;
+        const offsetY = pivot.y - newTopLeft.y;
 
-            // Verificar si la rotación ajustada está dentro de los límites y no colisiona
-            const isValid = adjustedBlocks.every(block =>
-                block.x >= 0 &&
-                block.x < boardWidth &&
-                block.y < boardHeight &&
-                (block.y < 0 || board[block.y][block.x] === 0) // No colisiona con otras piezas
-            );
+        // Ajustar los bloques rotados con el desplazamiento calculado
+        const adjustedBlocks = rotatedBlocks.map(block => ({
+            x: block.x + offsetX,
+            y: block.y + offsetY
+        }));
 
-            if (isValid) {
-                this.blocks = adjustedBlocks; // Aplicar la rotación ajustada
-                return;
-            }
+        // Verificar si la rotación ajustada está dentro de los límites y no colisiona
+        const isValid = adjustedBlocks.every(block =>
+            block.x >= 0 &&
+            block.x < boardWidth &&
+            block.y < boardHeight &&
+            (block.y < 0 || board[block.y][block.x] === 0) // No colisiona con otras piezas
+        );
+
+        if (isValid) {
+            this.blocks = adjustedBlocks; // Aplicar la rotación ajustada
         }
     }
 

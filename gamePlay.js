@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             this.scene.resize();
 
-            const playButton = createButton("playButton", "Play", () => this.startGame(), null, null);
+            const playButton = createButton("playButton", "Play", () => Game.startGame(), document.body, ["extra-class"]);
             playButton.style.zIndex = "10";
             playButton.style.pointerEvents = "auto";
             document.body.appendChild(playButton);
@@ -100,10 +100,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     this.board[y][x] = this.activePiece.shapeIndex + 1;
                 }
             });
-            this.clearLines();
-            if (this.activePiece.blocks.some(block => block.y < 0)) {
+
+            // Verificar si alguna pieza bloqueada está en la primera fila
+            if (this.activePiece.blocks.some(block => Math.floor(block.y) === 0)) {
                 this.isGameOver = true;
+                console.log("Game Over: Colisión en la primera fila");
+                return; // Salir para evitar más acciones
             }
+
+            this.clearLines();
             if (this.activeSound) playSound("click.wav");
         },
 
@@ -186,6 +191,13 @@ document.addEventListener("DOMContentLoaded", () => {
         gameLoop() {
             if (this.isGameOver) {
                 this.render();
+
+                // Mostrar el botón de inicio al finalizar la partida
+                const playButton = document.getElementById("playButton");
+                if (playButton) {
+                    playButton.style.display = "block"; // Mostrar el botón
+                }
+
                 return;
             }
 

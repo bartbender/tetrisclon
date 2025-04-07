@@ -30,16 +30,16 @@ canvas {
 
 button {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 1rem 2rem;
+    top: 20%; /* Posición en la parte superior */
+    left: 50%; /* Centrar horizontalmente */
+    transform: translateX(-50%); /* Ajustar el centrado horizontal */
+    padding: 0.8rem 1.5rem;
     font-family: 'Comic Sans MS', cursive, sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: white;
     background-color: #007BFF;
     border: none;
-    border-radius: 15px;
+    border-radius: 10px;
     box-shadow: 0 4px #0056b3;
     cursor: pointer;
     z-index: 10; /* Asegura que el botón esté por encima del canvas */
@@ -47,6 +47,6 @@ button {
 }
 
 button:active {
-    transform: translate(-50%, -50%) scale(0.95);
+    transform: translateX(-50%);
     box-shadow: 0 2px #0056b3;
 }
