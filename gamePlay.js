@@ -4,8 +4,12 @@ import Scene from './Scene.js';
 import { Piece, shapes } from "./piece.js";
 import { playSound } from "./audio.js";
 
+/**
+ * Archivo principal que controla la lógica del juego Tetris.
+ */
 document.addEventListener("DOMContentLoaded", () => {
     const Game = {
+        // Propiedades principales del juego
         canvas: null,
         context: null,
         scene: null,
@@ -26,6 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
         rows: 20, // Número de filas del tablero
         offsetY: 0, // Desplazamiento vertical para dejar margen superior
 
+        /**
+         * Inicializa el juego configurando el canvas, controles y tablero.
+         */
         init() {
             this.canvas = document.getElementById("gameCanvas");
             this.context = this.canvas.getContext("2d");
@@ -72,6 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
             this.speed = 1; // Inicializar velocidad
         },
 
+        /**
+         * Inicia una nueva partida.
+         */
         startGame() {
             console.log("Juego iniciado");
             const playButton = document.getElementById("playButton");
@@ -86,12 +96,19 @@ document.addEventListener("DOMContentLoaded", () => {
             this.gameLoop();
         },
 
+        /**
+         * Crea una pieza aleatoria.
+         * @returns {Piece} Pieza generada aleatoriamente.
+         */
         createRandomPiece() {
             const randomIndex = Math.floor(Math.random() * shapes.length);
             const randomColor = this.colors[randomIndex + 1];
             return new Piece(shapes[randomIndex], randomColor, randomIndex);
         },
 
+        /**
+         * Bloquea la pieza activa en el tablero.
+         */
         lockPiece() {
             this.activePiece.blocks.forEach(block => {
                 const x = Math.floor(block.x);
@@ -112,6 +129,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (this.activeSound) playSound("click.wav");
         },
 
+        /**
+         * Verifica si la pieza debe bloquearse.
+         * @returns {boolean} Verdadero si la pieza debe bloquearse.
+         */
         checkLock() {
             // Verificar si la pieza debe bloquearse (llega al fondo o colisiona con bloques existentes)
             return this.activePiece.blocks.some(block => {
@@ -126,6 +147,11 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         },
 
+        /**
+         * Verifica si la pieza está dentro de los límites horizontales.
+         * @param {number} dx - Desplazamiento horizontal.
+         * @returns {boolean} Verdadero si está dentro de los límites.
+         */
         checkHorizontalLimits(dx) {
             // Verificar si la pieza está dentro de los límites horizontales
             return this.activePiece.blocks.every(block => {
@@ -134,6 +160,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         },
 
+        /**
+         * Limpia las líneas completas del tablero.
+         */
         clearLines() {
             let linesCleared = 0;
             for (let y = this.board.length - 1; y >= 0; y--) {
@@ -151,6 +180,9 @@ document.addEventListener("DOMContentLoaded", () => {
             // Placeholder para actualizar la puntuación
         },
 
+        /**
+         * Actualiza el estado del juego.
+         */
         update() {
             if (!this.activePiece) return;
 
@@ -175,6 +207,9 @@ document.addEventListener("DOMContentLoaded", () => {
             this.updateScore();
         },
 
+        /**
+         * Renderiza el estado actual del juego.
+         */
         render() {
             this.scene.render(
                 this.board,
@@ -188,6 +223,9 @@ document.addEventListener("DOMContentLoaded", () => {
             );
         },
 
+        /**
+         * Bucle principal del juego.
+         */
         gameLoop() {
             if (this.isGameOver) {
                 this.render();

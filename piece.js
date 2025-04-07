@@ -1,23 +1,43 @@
+/**
+ * Representa una pieza del juego Tetris.
+ */
 export class Piece {
+    /**
+     * @param {Array} shape - Forma de la pieza (coordenadas relativas).
+     * @param {string} color - Color de la pieza.
+     */
     constructor(shape, color) {
-        this.shape = shape;
-        this.color = color;
-        this.blocks = this.initializeBlocks();
+        this.shape = shape; // Forma de la pieza
+        this.color = color; // Color de la pieza
+        this.blocks = this.initializeBlocks(); // Inicializar bloques
     }
 
+    /**
+     * Genera los bloques de la pieza según su forma.
+     * @returns {Array} Lista de bloques con coordenadas iniciales.
+     */
     initializeBlocks() {
-        // Genera los bloques de la pieza según su forma (coordenadas relativas al tablero)
         return this.shape.map(([x, y]) => ({ x, y }));
     }
 
+    /**
+     * Mueve la pieza en el tablero.
+     * @param {number} dx - Desplazamiento horizontal.
+     * @param {number} dy - Desplazamiento vertical.
+     */
     move(dx, dy) {
-        // Desplazar la pieza en el tablero
         this.blocks.forEach(block => {
             block.x += dx;
             block.y += dy;
         });
     }
 
+    /**
+     * Rota la pieza en el tablero.
+     * @param {number} boardWidth - Ancho del tablero.
+     * @param {number} boardHeight - Altura del tablero.
+     * @param {Array} board - Estado actual del tablero.
+     */
     rotate(boardWidth = 10, boardHeight = 20, board) {
         // Determinar el bloque de referencia (top-left) como punto de pivote
         const pivot = this.blocks.reduce((topLeft, block) => ({
@@ -60,6 +80,13 @@ export class Piece {
         }
     }
 
+    /**
+     * Dibuja la pieza en el canvas.
+     * @param {CanvasRenderingContext2D} context - Contexto del canvas.
+     * @param {number} blockSize - Tamaño de cada bloque.
+     * @param {number} offsetX - Desplazamiento horizontal.
+     * @param {number} offsetY - Desplazamiento vertical.
+     */
     render(context, blockSize, offsetX, offsetY) {
         // Dibujar la pieza en el canvas
         context.fillStyle = this.color;
@@ -81,6 +108,9 @@ export class Piece {
     }
 }
 
+/**
+ * Formas disponibles para las piezas del juego.
+ */
 export const shapes = [
     // Forma I
     [[0, 0], [1, 0], [2, 0], [3, 0]],
