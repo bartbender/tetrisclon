@@ -23,3 +23,6 @@ Dedicado con mucho cariño a mis sobrinos: Dani, Lucía, Rubén y Jorge.
 ## Enlace para jugar
 
 [¡Haz clic aquí para abrir la aplicación!](https://bartbender.github.io/tetrisclon/index.html)
+
+![imagen](https://github.com/user-attachments/assets/154c3dfc-ad8c-4896-bcea-f0ab72386bca)
+
